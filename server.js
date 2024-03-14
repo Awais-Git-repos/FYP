@@ -30,6 +30,6 @@ app.use('/doorUnlock', require('./routes/door_lock'));
 
 app.use('/forget', require('./routes/forgetPassword'))
 
-app.listen(port, () => {
-    console.log("Server Started on Port: ", port);
+app.listen(3000, () => {
+    console.log("Server Started on Port: ", 3000);
 })
