@@ -3,7 +3,7 @@ const connectDB = require('./db/db');
 require('dotenv').config();
 
 var app = express();
-connectDB();
+// connectDB();
 // app.use('/uploads', express.static('uploads'))
 
 // var port = process.env.PORT || 5000;
