@@ -1,11 +1,10 @@
-
 const express = require('express');
 const { check, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const auth = require('../middlewares/auth');
 
-const User = require('../models/User');
+const User = require('../models/Family');
 
 const router = express.Router();
 
@@ -29,27 +28,27 @@ router.get('/', auth, async (req, res) => {
 router.post(
     '/',
     [
-        check('email', 'Please enter a valid email address').isEmail(),
+        check('username', 'Please enter a valid email address').exists(),
         check('password', 'Please enter correct password').exists(),
     ],
     async (req, res) => {
         const result = validationResult(req);
         if (!result.isEmpty()) {
-            res.status(400).json({ errors: result.array() });
+            return res.status(400).json({ errors: result.array() });
         }
 
-        const { email, password } = req.body;
+        const { username, password } = req.body;
         // console.log("REquest body", email+" "+password);
-        console.log(email, password);
+        console.log(username, password);
 
         try {
-            const user = await User.findOne({ email });
+            const user = await User.findOne({ username });
 
             console.log("USER: ", user);
             if (!user) {
-                return res.status(200).json({ msg: 'User with this email does not exist.' });
+                return res.status(200).json({ msg: 'User with this userName does not exist.' });
             }
-
+            console.log("Hello World");
             const isMatch = await bcrypt.compare(password, user.password);
 
             if (!isMatch) {
@@ -79,7 +78,7 @@ router.post(
                     const dt = await User.findOne({ _id: id });
                     const { role } = dt;
                     console.log("The token is: " + token);
-                    return res.json({ token, dt });
+                    return res.json({ token });
                 }
             );
         } catch (error) {

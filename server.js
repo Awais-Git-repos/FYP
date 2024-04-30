@@ -1,78 +1,71 @@
-// const express = require('express');
-// const connectDB = require('./db/db');
-// require('dotenv').config();
-
-// var app = express();
-// // connectDB();
-// // app.use('/uploads', express.static('uploads'))
-
-// // var port = process.env.PORT || 5000;
-// const cors = require('cors')
-
-// try {
-//     connectDB();
-//     app.use(cors());
-//     app.use(express.json({ extended: false }))
-
-//     app.get('/:id', (req, res) => {
-//         const { id } = req.params
-//         res.status(200).json({ msg: `Server Listening with variable ${id}` })
-//     })
-
-//     app.get('/', (req, res) => {
-//         res.json({ msg: 'Server Running....' })
-//     })
-//     app.listen(3000, () => {
-//         console.log("Server Started on Port: ", 3000);
-//     })
-
-// } catch (error) {
-//     console.error('Database connection error:', error);
-// }
-
-
-
-
-// // app.use('/register', require('./routes/user'));
-// // app.use('/familyRegister', require('./routes/family'))
-// // app.use('/login', require('./routes/auth'));
-// // app.use('/mailVerify', require('./routes/userEmailVerification'))
-// // app.use('/doorUnlock', require('./routes/door_lock'));
-
-// // app.use('/forget', require('./routes/forgetPassword'))
-
-
 const express = require('express');
 const connectDB = require('./db/db');
+const { SerialPort } = require('serialport');
+const Readline = require('@serialport/parser-readline');
+const auth = require('./middlewares/auth');
+const check = require('./routes/check')
 require('dotenv').config();
 
-const app = express();
-const cors = require('cors');
+var app = express();
+connectDB();
+app.use('/uploads', express.static('uploads'))
 
-try {
-    // Connect to the database
-    connectDB();
+// var port = process.env.PORT || 5000;
 
-    // Set up middleware
-    app.use(cors());
-    app.use(express.json({ extended: false }));
+const cors = require('cors')
 
-    // Define routes
-    app.get('/:id', (req, res) => {
-        const { id } = req.params;
-        res.status(200).json({ msg: `Server listening with variable ${id}` });
-    });
+// const SERIAL_PORT = '/dev/tty.wchusbserialfa1410'; // Replace 'COM7' with your actual serial port (e.g., 'COM3' on Windows)
+// const BAUD_RATE = 9600;
 
-    app.get('/', (req, res) => {
-        res.json({ msg: 'Server running....' });
-    });
+// const config = {
+//     path: "COM6",
+//     baudRate: 9600,
+//     autoOpen: false
+// }
 
-    // Start the server
-    const port = process.env.PORT || 3000;
-    app.listen(port, () => {
-        console.log(`Server started on port ${port}`);
-    });
-} catch (error) {
-    // Handle any errors that occurred during setup
-    console.error('Server setup error:', error);
-}
+// const port = new SerialPort(config);
+// const parser = serialPort.pipe(new Readline({ delimiter: '\n' }));
+
+app.use(cors());
+app.use(express.json({ extended: false }))
+
+
+// app.get('/openlock', [auth, check], (req, res) => {
+//     port.write("1");
+//     return res.status(200).json({ msg: "Response Successfully Sended" })
+// })
+
+app.use('/register', require('./routes/user'));
+app.use('/familyRegister', require('./routes/family'))
+app.use('/login', require('./routes/auth'));
+app.use('/normalLogin', require('./routes/noraml_login'))
+app.use('/mailVerify', require('./routes/userEmailVerification'))
+app.use('/doorUnlock', require('./routes/door_lock'));
+app.use('/forget', require('./routes/forgetPassword'))
+app.use('/timeAccess', require('./routes/timelevelAccess'))
+
+// port.open((err) => {
+//     if (err) {
+//         console.log("Error opening the port: " + err.message)
+//     }
+//     else {
+//         console.log("---Connected Successfully---");
+//     }
+// })
+
+// port.on('data', (data) => {
+//     console.log(data.toString());
+// })
+
+// port.open('data', (data) => {
+//     console.log(data)
+// })
+
+app.get('/checking', (req, res) => {
+    res.send('Hello World')
+})
+
+
+app.listen(8080, () => {
+    console.log("Server Started on Port: ", 8080);
+})

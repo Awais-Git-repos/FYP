@@ -42,7 +42,6 @@ routes.post('/', [
                 id: user.id
             },
         }
-        res.json({ msg: "Register Successfull" })
         jwt.sign(
             payload,
             process.env.JWTSECRET || 'mySecretKey',
@@ -51,7 +50,7 @@ routes.post('/', [
             },
             (err, token) => {
                 if (err) throw err.message;
-                res.json({ token })
+                return res.json({ token })
             }
         )
     } catch (error) {

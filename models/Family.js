@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 const userSchema = mongoose.Schema({
     email: {
@@ -21,9 +22,19 @@ const userSchema = mongoose.Schema({
     pincode: {
         type: String,
     },
-    time_access: {
+    adminId: {
+        type: Schema.ObjectId,
+        ref: 'user'
+    },
+    start_time: {
         type: String,
-        required: true,
+    },
+    end_time: {
+        type: String,
+    },
+    time_status: {
+        type: String,
+        default: '0'
     },
     created_at: {
         type: Date,
